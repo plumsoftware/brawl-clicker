@@ -24,6 +24,7 @@ public abstract class Data {
             "legend_al_primo",
             "legend_nita_bear",
             "space_brock",
-            "legend_leon"
+            "legend_leon",
+            "amogus_red"
     };
 }

@@ -22,7 +22,8 @@ public abstract class Heroes {
             "Легендарный Эль` Примо",
             "Легендарный медведь Ниты",
             "Космический Брок",
-            "Легендарный Леон"
+            "Легендарный Леон",
+            "Секретный бравлер"
 
     };
     public static final int[] HEROES_RES_ID = new int[]{
@@ -41,7 +42,8 @@ public abstract class Heroes {
             R.drawable.elprimo_gold,
             R.drawable.nita_gold,
             R.drawable.brock_2,
-            R.drawable.leon_gold
+            R.drawable.leon_gold,
+            R.drawable.amogus
     };
     public static final int[] HEROES_CLICKS = new int[]{
             1,
@@ -59,7 +61,8 @@ public abstract class Heroes {
             120,
             140,
             200,
-            250
+            250,
+            300
     };
     public static final int[] HEROES_PRICES = new int[]{
             0, // 0
@@ -77,7 +80,8 @@ public abstract class Heroes {
             150000, // 100
             250000, // 120
             500000, // 140
-            1000000 // 200
+            1000000, // 200
+            1200000
     };
 
     public static List<Hero> buildHeroes() {
