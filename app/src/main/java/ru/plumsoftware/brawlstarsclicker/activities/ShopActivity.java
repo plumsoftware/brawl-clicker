@@ -17,13 +17,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.yandex.mobile.ads.common.AdError;
 import com.yandex.mobile.ads.common.AdRequest;
+import com.yandex.mobile.ads.common.AdRequestConfiguration;
 import com.yandex.mobile.ads.common.AdRequestError;
 import com.yandex.mobile.ads.common.ImpressionData;
-import com.yandex.mobile.ads.common.InitializationListener;
 import com.yandex.mobile.ads.common.MobileAds;
 import com.yandex.mobile.ads.interstitial.InterstitialAd;
 import com.yandex.mobile.ads.interstitial.InterstitialAdEventListener;
+import com.yandex.mobile.ads.interstitial.InterstitialAdLoadListener;
+import com.yandex.mobile.ads.interstitial.InterstitialAdLoader;
 
 import java.util.List;
 
@@ -39,8 +42,10 @@ public class ShopActivity extends AppCompatActivity {
     private int click;
     private int imageResId;
     private SharedPreferences sharedPreferences;
-    private InterstitialAd interstitialAd;
-    private AdRequest adRequest;
+    @Nullable
+    private InterstitialAd mInterstitialAd = null;
+    @Nullable
+    private InterstitialAdLoader mInterstitialAdLoader = null;
     private CustomProgressDialog progressDialog;
 
     @SuppressLint("SetTextI18n")
@@ -53,65 +58,59 @@ public class ShopActivity extends AppCompatActivity {
         Context context = ShopActivity.this;
         Activity activity = ShopActivity.this;
 
-        MobileAds.initialize(this, new InitializationListener() {
-            @Override
-            public void onInitializationCompleted() {
+        MobileAds.initialize(this, () -> {
 
-            }
         });
 
-        interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId("R-M-2428506-1");
-        interstitialAd.setInterstitialAdEventListener(new InterstitialAdEventListener() {
+        mInterstitialAdLoader = new InterstitialAdLoader(ShopActivity.this);
+        mInterstitialAdLoader.setAdLoadListener(new InterstitialAdLoadListener() {
             @Override
-            public void onAdLoaded() {
+            public void onAdLoaded(@NonNull final InterstitialAd interstitialAd) {
+                mInterstitialAd = interstitialAd;
                 progressDialog.dismissProgressDialog();
-                interstitialAd.show();
+                if (mInterstitialAd != null) {
+                    mInterstitialAd.setAdEventListener(new InterstitialAdEventListener() {
+                        @Override
+                        public void onAdShown() {
+
+                        }
+
+                        @Override
+                        public void onAdFailedToShow(@NonNull AdError adError) {
+
+                        }
+
+                        @Override
+                        public void onAdDismissed() {
+                            finish();
+                            overridePendingTransition(0, 0);
+                            startActivity(new Intent(ShopActivity.this, MainActivity.class));
+                        }
+
+                        @Override
+                        public void onAdClicked() {
+                            finish();
+                            overridePendingTransition(0, 0);
+                            startActivity(new Intent(ShopActivity.this, MainActivity.class));
+                        }
+
+                        @Override
+                        public void onAdImpression(@Nullable ImpressionData impressionData) {
+
+                        }
+                    });
+                }
+                mInterstitialAd.show(ShopActivity.this);
             }
 
             @Override
-            public void onAdFailedToLoad(@NonNull AdRequestError adRequestError) {
+            public void onAdFailedToLoad(@NonNull final AdRequestError adRequestError) {
                 progressDialog.dismissProgressDialog();
                 finish();
                 overridePendingTransition(0, 0);
                 startActivity(new Intent(ShopActivity.this, MainActivity.class));
             }
-
-            @Override
-            public void onAdShown() {
-
-            }
-
-            @Override
-            public void onAdDismissed() {
-                progressDialog.dismissProgressDialog();
-                finish();
-                overridePendingTransition(0, 0);
-                startActivity(new Intent(ShopActivity.this, MainActivity.class));
-            }
-
-            @Override
-            public void onAdClicked() {
-                progressDialog.dismissProgressDialog();
-            }
-
-            @Override
-            public void onLeftApplication() {
-
-            }
-
-            @Override
-            public void onReturnedToApplication() {
-
-            }
-
-            @Override
-            public void onImpression(@Nullable ImpressionData impressionData) {
-
-            }
         });
-        adRequest = new AdRequest.Builder().build();
-
         progressDialog = new CustomProgressDialog(this);
         progressDialog.setMessage("Загрузка...");
 //        endregion
@@ -187,6 +186,10 @@ public class ShopActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         progressDialog.showProgressDialog();
-        interstitialAd.loadAd(adRequest);
+        if (mInterstitialAdLoader != null ) {
+            final AdRequestConfiguration adRequestConfiguration =
+                    new AdRequestConfiguration.Builder("R-M-2428506-1").build();
+            mInterstitialAdLoader.loadAd(adRequestConfiguration);
+        }
     }
 }
