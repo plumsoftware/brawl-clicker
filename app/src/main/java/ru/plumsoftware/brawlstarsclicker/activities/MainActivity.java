@@ -21,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yandex.mobile.ads.appopenad.AppOpenAd;
+import com.yandex.mobile.ads.appopenad.AppOpenAdEventListener;
+import com.yandex.mobile.ads.appopenad.AppOpenAdLoadListener;
+import com.yandex.mobile.ads.appopenad.AppOpenAdLoader;
 import com.yandex.mobile.ads.common.AdError;
 import com.yandex.mobile.ads.common.AdRequest;
 import com.yandex.mobile.ads.common.AdRequestConfiguration;
@@ -50,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
     private RewardedAdLoader mRewardedAdLoader = null;
     private AdRequest adRequest;
     private CustomProgressDialog progressDialog;
+    private AppOpenAdLoader appOpenAdLoader = null;
+    private final String AD_UNIT_ID = "R-M-2428506-3";
+    private final AdRequestConfiguration adRequestConfiguration = new AdRequestConfiguration.Builder(AD_UNIT_ID).build();
+    private  AppOpenAd mAppOpenAd = null;
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -71,15 +80,69 @@ public class MainActivity extends AppCompatActivity {
         Context context = MainActivity.this;
         Activity activity = MainActivity.this;
 
-        progressDialog = new CustomProgressDialog(this);
+        progressDialog = new CustomProgressDialog(context);
         progressDialog.setMessage("Загрузка...");
+        progressDialog.showProgressDialog();
 
-        MobileAds.initialize(this, new InitializationListener() {
-            @Override
-            public void onInitializationCompleted() {
+        MobileAds.initialize(this, () -> {
 
-            }
         });
+
+        appOpenAdLoader = new AppOpenAdLoader(context);
+        AppOpenAdLoadListener appOpenAdLoadListener = new AppOpenAdLoadListener() {
+            @Override
+            public void onAdLoaded(@NonNull final AppOpenAd appOpenAd) {
+                // The ad was loaded successfully. Now you can show loaded ad.
+                mAppOpenAd = appOpenAd;
+                mAppOpenAd.show(activity);
+                progressDialog.dismissProgressDialog();
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull final AdRequestError adRequestError) {
+                // Ad failed to load with AdRequestError.
+                // Attempting to load a new ad from the onAdFailedToLoad() method is strongly discouraged.
+                progressDialog.dismissProgressDialog();
+            }
+        };
+        appOpenAdLoader.setAdLoadListener(appOpenAdLoadListener);
+        appOpenAdLoader.loadAd(adRequestConfiguration);
+
+        AppOpenAdEventListener appOpenAdEventListener = new AppOpenAdEventListener() {
+            @Override
+            public void onAdShown() {
+                // Called when ad is shown.
+            }
+
+            @Override
+            public void onAdFailedToShow(@NonNull final AdError adError) {
+                // Called when ad failed to show.
+            }
+
+            @Override
+            public void onAdDismissed() {
+                // Called when ad is dismissed.
+                // Clean resources after dismiss and preload new ad.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Called when a click is recorded for an ad.
+            }
+
+            @Override
+            public void onAdImpression(@Nullable final ImpressionData impressionData) {
+                // Called when an impression is recorded for an ad.
+            }
+        };
+
+        if (mAppOpenAd != null) {
+            mAppOpenAd.setAdEventListener(appOpenAdEventListener);
+        }
+
+        if (mAppOpenAd != null) {
+            mAppOpenAd.show(activity);
+        }
 //        endregion
 
 //        region::Find views
