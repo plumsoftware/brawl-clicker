@@ -23,7 +23,9 @@ public abstract class Heroes {
             "Легендарный медведь Ниты",
             "Космический Брок",
             "Легендарный Леон",
-            "Секретный бравлер"
+            "Секретный бравлер",
+            "Ужасная птица \uD83D\uDE2E",
+            "???"
 
     };
     public static final int[] HEROES_RES_ID = new int[]{
@@ -43,7 +45,9 @@ public abstract class Heroes {
             R.drawable.nita_gold,
             R.drawable.brock_2,
             R.drawable.leon_gold,
-            R.drawable.amogus
+            R.drawable.amogus,
+            R.drawable.bird,
+            R.drawable.monster
     };
     public static final int[] HEROES_CLICKS = new int[]{
             1,
@@ -62,7 +66,9 @@ public abstract class Heroes {
             140,
             200,
             250,
-            300
+            300,
+            350,
+            400
     };
     public static final int[] HEROES_PRICES = new int[]{
             0, // 0
@@ -81,7 +87,9 @@ public abstract class Heroes {
             250000, // 120
             500000, // 140
             1000000, // 200
-            1200000
+            1200000, // 350
+            1750000, // 400
+            2500000
     };
 
     public static List<Hero> buildHeroes() {
