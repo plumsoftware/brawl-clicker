@@ -6,6 +6,8 @@ public abstract class Data {
     public static final String SP_SCORE = "score";
     public static final String SP_IMAGE_RES_ID = "imageResId";
 
+    public static final String SP_IMAGE_BACK_RES_ID = "imageBackResId";
+
     public static final String SP_IS_BUY = "isBuy";
 
     public static final String[] SP_HEROES_IS_BUY = new String[]{
@@ -28,5 +30,12 @@ public abstract class Data {
             "amogus_red",
             "digusting_bird",
             "monster"
+    };
+
+    public static final String[] SP_BACK_IS_BUY = new String[]{
+            "back_2",
+            "back_3",
+            "back_4",
+            "back_5"
     };
 }

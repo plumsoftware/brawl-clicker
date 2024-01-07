@@ -12,12 +12,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private AppOpenAdLoader appOpenAdLoader = null;
     private final String AD_UNIT_ID = "R-M-2428506-3";
     private final AdRequestConfiguration adRequestConfiguration = new AdRequestConfiguration.Builder(AD_UNIT_ID).build();
-    private  AppOpenAd mAppOpenAd = null;
+    private AppOpenAd mAppOpenAd = null;
 
 
     @SuppressLint("SetTextI18n")
@@ -88,60 +90,64 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        appOpenAdLoader = new AppOpenAdLoader(context);
-        AppOpenAdLoadListener appOpenAdLoadListener = new AppOpenAdLoadListener() {
-            @Override
-            public void onAdLoaded(@NonNull final AppOpenAd appOpenAd) {
-                // The ad was loaded successfully. Now you can show loaded ad.
-                mAppOpenAd = appOpenAd;
+        if (getIntent().getBooleanExtra("soa", true)) {
+            appOpenAdLoader = new AppOpenAdLoader(context);
+            AppOpenAdLoadListener appOpenAdLoadListener = new AppOpenAdLoadListener() {
+                @Override
+                public void onAdLoaded(@NonNull final AppOpenAd appOpenAd) {
+                    // The ad was loaded successfully. Now you can show loaded ad.
+                    mAppOpenAd = appOpenAd;
+                    mAppOpenAd.show(activity);
+                    progressDialog.dismissProgressDialog();
+                }
+
+                @Override
+                public void onAdFailedToLoad(@NonNull final AdRequestError adRequestError) {
+                    // Ad failed to load with AdRequestError.
+                    // Attempting to load a new ad from the onAdFailedToLoad() method is strongly discouraged.
+                    progressDialog.dismissProgressDialog();
+                }
+            };
+            appOpenAdLoader.setAdLoadListener(appOpenAdLoadListener);
+            appOpenAdLoader.loadAd(adRequestConfiguration);
+
+            AppOpenAdEventListener appOpenAdEventListener = new AppOpenAdEventListener() {
+                @Override
+                public void onAdShown() {
+                    // Called when ad is shown.
+                }
+
+                @Override
+                public void onAdFailedToShow(@NonNull final AdError adError) {
+                    // Called when ad failed to show.
+                }
+
+                @Override
+                public void onAdDismissed() {
+                    // Called when ad is dismissed.
+                    // Clean resources after dismiss and preload new ad.
+                }
+
+                @Override
+                public void onAdClicked() {
+                    // Called when a click is recorded for an ad.
+                }
+
+                @Override
+                public void onAdImpression(@Nullable final ImpressionData impressionData) {
+                    // Called when an impression is recorded for an ad.
+                }
+            };
+
+            if (mAppOpenAd != null) {
+                mAppOpenAd.setAdEventListener(appOpenAdEventListener);
+            }
+
+            if (mAppOpenAd != null) {
                 mAppOpenAd.show(activity);
-                progressDialog.dismissProgressDialog();
             }
-
-            @Override
-            public void onAdFailedToLoad(@NonNull final AdRequestError adRequestError) {
-                // Ad failed to load with AdRequestError.
-                // Attempting to load a new ad from the onAdFailedToLoad() method is strongly discouraged.
-                progressDialog.dismissProgressDialog();
-            }
-        };
-        appOpenAdLoader.setAdLoadListener(appOpenAdLoadListener);
-        appOpenAdLoader.loadAd(adRequestConfiguration);
-
-        AppOpenAdEventListener appOpenAdEventListener = new AppOpenAdEventListener() {
-            @Override
-            public void onAdShown() {
-                // Called when ad is shown.
-            }
-
-            @Override
-            public void onAdFailedToShow(@NonNull final AdError adError) {
-                // Called when ad failed to show.
-            }
-
-            @Override
-            public void onAdDismissed() {
-                // Called when ad is dismissed.
-                // Clean resources after dismiss and preload new ad.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Called when a click is recorded for an ad.
-            }
-
-            @Override
-            public void onAdImpression(@Nullable final ImpressionData impressionData) {
-                // Called when an impression is recorded for an ad.
-            }
-        };
-
-        if (mAppOpenAd != null) {
-            mAppOpenAd.setAdEventListener(appOpenAdEventListener);
-        }
-
-        if (mAppOpenAd != null) {
-            mAppOpenAd.show(activity);
+        } else {
+            progressDialog.dismissProgressDialog();
         }
 //        endregion
 
@@ -149,9 +155,12 @@ public class MainActivity extends AppCompatActivity {
         ImageView ads = (ImageView) findViewById(R.id.ads);
         ImageView buy = (ImageView) findViewById(R.id.buy);
         ImageView image = (ImageView) findViewById(R.id.image);
+        ImageView buyBack = (ImageView) findViewById(R.id.buy_back);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
         TextView textViewScore = (TextView) findViewById(R.id.textViewScore);
         CardView cardShop = (CardView) findViewById(R.id.cardShop);
         CardView cardAds = (CardView) findViewById(R.id.cardAds);
+        CardView cardBackgroundShop = (CardView) findViewById(R.id.cardShopBack);
 //        endregion
 
 //        region::Animations
@@ -162,6 +171,10 @@ public class MainActivity extends AppCompatActivity {
 
 //        region::Get data
         sharedPreferences = context.getSharedPreferences(Data.SP_NAME, Context.MODE_PRIVATE);
+
+
+        layout.setBackgroundResource(sharedPreferences.getInt(Data.SP_IMAGE_BACK_RES_ID, R.drawable.back_2));
+
         score = sharedPreferences.getLong(Data.SP_SCORE, 0);
         click = sharedPreferences.getInt(Data.SP_CLICK, 1);
         imageResId = sharedPreferences.getInt(Data.SP_IMAGE_RES_ID, R.drawable.spike_1);
@@ -236,6 +249,45 @@ public class MainActivity extends AppCompatActivity {
                         mRewardedAd = rewardedAd;
                         progressDialog.dismissProgressDialog();
                         rewardedAd.show(MainActivity.this);
+                        mRewardedAd.setAdEventListener(new RewardedAdEventListener() {
+                            @Override
+                            public void onAdShown() {
+                                progressDialog.dismissProgressDialog();
+                            }
+
+                            @Override
+                            public void onAdFailedToShow(@NonNull AdError adError) {
+
+                            }
+
+                            @Override
+                            public void onAdDismissed() {
+                                progressDialog.dismissProgressDialog();
+                            }
+
+                            @Override
+                            public void onAdClicked() {
+
+                            }
+
+                            @Override
+                            public void onAdImpression(@Nullable ImpressionData impressionData) {
+
+                            }
+
+                            @Override
+                            public void onRewarded(@NonNull Reward reward) {
+
+                                mul = 5;
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mul = 1;
+                                    }
+                                }, 3000);
+
+                            }
+                        });
                     }
 
                     @Override
@@ -245,52 +297,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                if (mRewardedAd != null) {
-                    mRewardedAd.setAdEventListener(new RewardedAdEventListener() {
-                        @Override
-                        public void onAdShown() {
-                            progressDialog.dismissProgressDialog();
-                        }
-
-                        @Override
-                        public void onAdFailedToShow(@NonNull AdError adError) {
-
-                        }
-
-                        @Override
-                        public void onAdDismissed() {
-                            progressDialog.dismissProgressDialog();
-                        }
-
-                        @Override
-                        public void onAdClicked() {
-
-                        }
-
-                        @Override
-                        public void onAdImpression(@Nullable ImpressionData impressionData) {
-
-                        }
-
-                        @Override
-                        public void onRewarded(@NonNull Reward reward) {
-                            CountDownTimer countDownTimer = new CountDownTimer(5000, 1000) {
-                                @Override
-                                public void onTick(long l) {
-                                    mul = 5;
-                                }
-
-                                @Override
-                                public void onFinish() {
-                                    mul = 1;
-                                }
-                            };
-                            countDownTimer.start();
-                        }
-                    });
-                }
-
-                if (mRewardedAdLoader != null ) {
+                if (mRewardedAdLoader != null) {
                     final AdRequestConfiguration adRequestConfiguration =
                             new AdRequestConfiguration.Builder("R-M-2428506-2").build();
                     mRewardedAdLoader.loadAd(adRequestConfiguration);
@@ -325,8 +332,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+                startActivity(new Intent(context, ShopActivity.class).putExtra("soa", false));
                 overridePendingTransition(0, 0);
-                startActivity(new Intent(context, ShopActivity.class));
             }
         });
 
@@ -346,6 +353,38 @@ public class MainActivity extends AppCompatActivity {
                         cardShop.setScaleX(1.0f);
                         cardShop.setScaleY(1.0f);
                         cardShop.setCardBackgroundColor(context.getResources().getColor(R.color.color_4));
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                }
+                return false;
+            }
+        });
+
+        buyBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                startActivity(new Intent(context, BackgroundShopActivity.class).putExtra("soa", false));
+                overridePendingTransition(0, 0);
+            }
+        });
+
+        buyBack.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Уменьшаем размер view
+                        cardBackgroundShop.setScaleX(0.9f);
+                        cardBackgroundShop.setScaleY(0.9f);
+                        cardBackgroundShop.setCardBackgroundColor(context.getResources().getColor(R.color.color_2));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        // Возвращаем исходный размер view
+                        cardBackgroundShop.setScaleX(1.0f);
+                        cardBackgroundShop.setScaleY(1.0f);
+                        cardBackgroundShop.setCardBackgroundColor(context.getResources().getColor(R.color.color_4));
                         break;
                     case MotionEvent.ACTION_CANCEL:
                 }
