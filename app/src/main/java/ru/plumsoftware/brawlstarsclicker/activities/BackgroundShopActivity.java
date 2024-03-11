@@ -80,14 +80,22 @@ public class BackgroundShopActivity extends AppCompatActivity {
                         public void onAdDismissed() {
                             finish();
                             overridePendingTransition(0, 0);
-                            startActivity(new Intent(BackgroundShopActivity.this, MainActivity.class).putExtra("soa", false));
+                            Intent i = new Intent(BackgroundShopActivity.this, MainActivity.class);
+                            i.putExtra("soa", false);
+                            int a = getIntent().getIntExtra("interstitial_ads_count", 0) + 1;
+                            i.putExtra("interstitial_ads_count", a);
+                            startActivity(i);
                         }
 
                         @Override
                         public void onAdClicked() {
                             finish();
                             overridePendingTransition(0, 0);
-                            startActivity(new Intent(BackgroundShopActivity.this, MainActivity.class).putExtra("soa", false));
+                            Intent i = new Intent(BackgroundShopActivity.this, MainActivity.class);
+                            i.putExtra("soa", false);
+                            int a = getIntent().getIntExtra("interstitial_ads_count", 0) + 1;
+                            i.putExtra("interstitial_ads_count", a);
+                            startActivity(i);
                         }
 
                         @Override
@@ -104,7 +112,11 @@ public class BackgroundShopActivity extends AppCompatActivity {
                 progressDialog.dismissProgressDialog();
                 finish();
                 overridePendingTransition(0, 0);
-                startActivity(new Intent(BackgroundShopActivity.this, MainActivity.class).putExtra("soa", false));
+                Intent i = new Intent(BackgroundShopActivity.this, MainActivity.class);
+                i.putExtra("soa", false);
+                int a = getIntent().getIntExtra("interstitial_ads_count", 0);
+                i.putExtra("interstitial_ads_count", a);
+                startActivity(i);
             }
         });
         progressDialog = new CustomProgressDialog(BackgroundShopActivity.this);
@@ -146,12 +158,35 @@ public class BackgroundShopActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        progressDialog.showProgressDialog();
-        sharedPreferences.edit().putBoolean("isShowAppOpen", false).apply();
         if (mInterstitialAdLoader != null) {
-            final AdRequestConfiguration adRequestConfiguration =
-                    new AdRequestConfiguration.Builder("R-M-2428506-1").build();
-            mInterstitialAdLoader.loadAd(adRequestConfiguration);
+            if (
+                    getIntent().getIntExtra("interstitial_ads_count", 0) % 4 == 0
+            ) {
+                progressDialog.showProgressDialog();
+                final AdRequestConfiguration adRequestConfiguration =
+                        new AdRequestConfiguration.Builder("R-M-2428506-1").build();
+                mInterstitialAdLoader.loadAd(adRequestConfiguration);
+            } else {
+                progressDialog.dismissProgressDialog();
+
+                finish();
+                overridePendingTransition(0, 0);
+
+                Intent i = new Intent(BackgroundShopActivity.this, MainActivity.class);
+                i.putExtra("soa", false);
+                int a = getIntent().getIntExtra("interstitial_ads_count", 0);
+                i.putExtra("interstitial_ads_count", a);
+                startActivity(i);
+            }
+        } else {
+            finish();
+            overridePendingTransition(0, 0);
+
+            Intent i = new Intent(BackgroundShopActivity.this, MainActivity.class);
+            i.putExtra("soa", false);
+            int a = getIntent().getIntExtra("interstitial_ads_count", 0);
+            i.putExtra("interstitial_ads_count", a);
+            startActivity(i);
         }
     }
 }

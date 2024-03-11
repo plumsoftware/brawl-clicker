@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         ads.startAnimation(pulseAnimation);
         if (
                 sharedPreferences.getBoolean("11.03.2024_1", true) ||
-                        sharedPreferences.getBoolean("11.03.2024_2", true)
+                sharedPreferences.getBoolean("11.03.2024_2", true)
         )
             textViewNew.startAnimation(pulseAnimation);
         else
@@ -340,7 +340,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                startActivity(new Intent(context, ShopActivity.class).putExtra("soa", false));
+                Intent i = new Intent(context, ShopActivity.class);
+                i.putExtra("soa", false);
+                i.putExtra("interstitial_ads_count", getIntent().getIntExtra("interstitial_ads_count", 0));
+                startActivity(i);
                 overridePendingTransition(0, 0);
             }
         });
@@ -372,7 +375,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                startActivity(new Intent(context, BackgroundShopActivity.class).putExtra("soa", false));
+                Intent i = new Intent(context, BackgroundShopActivity.class);
+                i.putExtra("soa", false);
+                i.putExtra("interstitial_ads_count", getIntent().getIntExtra("interstitial_ads_count", 0));
+                startActivity(i);
                 overridePendingTransition(0, 0);
             }
         });
