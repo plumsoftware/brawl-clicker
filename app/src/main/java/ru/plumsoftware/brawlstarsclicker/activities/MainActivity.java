@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView buyBack = (ImageView) findViewById(R.id.buy_back);
         LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
         TextView textViewScore = (TextView) findViewById(R.id.textViewScore);
+        TextView textViewNew = (TextView) findViewById(R.id.textViewNew);
         CardView cardShop = (CardView) findViewById(R.id.cardShop);
         CardView cardAds = (CardView) findViewById(R.id.cardAds);
         CardView cardBackgroundShop = (CardView) findViewById(R.id.cardShopBack);
@@ -193,6 +194,13 @@ public class MainActivity extends AppCompatActivity {
 
 //        region::Start animations
         ads.startAnimation(pulseAnimation);
+        if (
+                sharedPreferences.getBoolean("11.03.2024_1", true) ||
+                        sharedPreferences.getBoolean("11.03.2024_2", true)
+        )
+            textViewNew.startAnimation(pulseAnimation);
+        else
+            textViewNew.setVisibility(View.GONE);
 //        endregion
 
 //        region::Setup data

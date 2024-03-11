@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import com.yandex.mobile.ads.interstitial.InterstitialAd;
 import com.yandex.mobile.ads.interstitial.InterstitialAdEventListener;
 
 import java.util.List;
+import java.util.Random;
 
 import ru.plumsoftware.brawlstarsclicker.R;
 import ru.plumsoftware.brawlstarsclicker.activities.MainActivity;
@@ -41,6 +44,7 @@ public class HeroAdapter extends RecyclerView.Adapter<HeroViewHolder> {
 
     private SharedPreferences sharedPreferences;
     private int gonePrice = 1;
+    private Animation pulseAnimation;
 //    private AdRequest adRequest;
 //    private CustomProgressDialog progressDialog;
 //    private InterstitialAd interstitialAd;
@@ -49,6 +53,7 @@ public class HeroAdapter extends RecyclerView.Adapter<HeroViewHolder> {
         this.context = context;
         this.list = list;
         sharedPreferences = context.getSharedPreferences(Data.SP_NAME, Context.MODE_PRIVATE);
+        pulseAnimation = AnimationUtils.loadAnimation(context, R.anim.hero_pulse);
 //        progressDialog = new CustomProgressDialog(context);
     }
 
@@ -56,7 +61,7 @@ public class HeroAdapter extends RecyclerView.Adapter<HeroViewHolder> {
     @Override
     public HeroViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new HeroViewHolder(LayoutInflater
-                .from(context)
+                .from(parent.getContext())
                 .inflate(R.layout.hero_item, parent, false));
     }
 
@@ -203,6 +208,14 @@ public class HeroAdapter extends RecyclerView.Adapter<HeroViewHolder> {
                     return false;
                 }
             });
+        }
+
+        if (
+                sharedPreferences.getBoolean("11.03.2024_1", true) & position == list.size() - 1 ||
+                sharedPreferences.getBoolean("11.03.2024_2", true) & position == list.size() - 2
+        ) {
+            holder.lay.startAnimation(pulseAnimation);
+            sharedPreferences.edit().putBoolean("11.03.2024_1", false).putBoolean("11.03.2024_2", false).apply();
         }
     }
 

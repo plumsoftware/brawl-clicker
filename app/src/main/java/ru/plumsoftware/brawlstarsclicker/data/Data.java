@@ -29,7 +29,9 @@ public abstract class Data {
             "legend_leon",
             "amogus_red",
             "digusting_bird",
-            "monster"
+            "monster",
+            "grom",
+            "gold_bird"
     };
 
     public static final String[] SP_BACK_IS_BUY = new String[]{
