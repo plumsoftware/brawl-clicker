@@ -174,11 +174,13 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = context.getSharedPreferences(Data.SP_NAME, Context.MODE_PRIVATE);
 
 
-        layout.setBackgroundResource(sharedPreferences.getInt(Data.SP_IMAGE_BACK_RES_ID, R.drawable.back_2));
+//        layout.setBackgroundResource(sharedPreferences.getInt(Data.SP_IMAGE_BACK_RES_ID, R.drawable.back_2));
+        layout.setBackgroundResource(R.drawable.skibidi_toilet_nackground_1);
 
         score = sharedPreferences.getLong(Data.SP_SCORE, 0);
         click = sharedPreferences.getInt(Data.SP_CLICK, 1);
-        imageResId = sharedPreferences.getInt(Data.SP_IMAGE_RES_ID, R.drawable.spike_1);
+//        imageResId = sharedPreferences.getInt(Data.SP_IMAGE_RES_ID, R.drawable.spike_1);
+        imageResId = R.drawable.skibidi_touilet_1;
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putBoolean(Data.SP_HEROES_IS_BUY[0], true);
         edit.apply();
@@ -196,7 +198,8 @@ public class MainActivity extends AppCompatActivity {
         ads.startAnimation(pulseAnimation);
         if (
                 sharedPreferences.getBoolean("11.03.2024_1", true) ||
-                sharedPreferences.getBoolean("11.03.2024_2", true)
+                sharedPreferences.getBoolean("11.03.2024_2", true) ||
+                sharedPreferences.getBoolean("13.03.2024_1", true)
         )
             textViewNew.startAnimation(pulseAnimation);
         else
@@ -244,72 +247,69 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ads.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                progressDialog.showProgressDialog();
-                adRequest = new AdRequest.Builder().build();
-                mRewardedAdLoader = new RewardedAdLoader(MainActivity.this);
+        ads.setOnClickListener(view -> {
+            progressDialog.showProgressDialog();
+            adRequest = new AdRequest.Builder().build();
+            mRewardedAdLoader = new RewardedAdLoader(MainActivity.this);
 
-                mRewardedAdLoader.setAdLoadListener(new RewardedAdLoadListener() {
-                    @Override
-                    public void onAdLoaded(@NonNull final RewardedAd rewardedAd) {
-                        mRewardedAd = rewardedAd;
-                        progressDialog.dismissProgressDialog();
-                        rewardedAd.show(MainActivity.this);
-                        mRewardedAd.setAdEventListener(new RewardedAdEventListener() {
-                            @Override
-                            public void onAdShown() {
-                                progressDialog.dismissProgressDialog();
-                            }
+            mRewardedAdLoader.setAdLoadListener(new RewardedAdLoadListener() {
+                @Override
+                public void onAdLoaded(@NonNull final RewardedAd rewardedAd) {
+                    mRewardedAd = rewardedAd;
+                    progressDialog.dismissProgressDialog();
+                    rewardedAd.show(MainActivity.this);
+                    mRewardedAd.setAdEventListener(new RewardedAdEventListener() {
+                        @Override
+                        public void onAdShown() {
+                            progressDialog.dismissProgressDialog();
+                        }
 
-                            @Override
-                            public void onAdFailedToShow(@NonNull AdError adError) {
+                        @Override
+                        public void onAdFailedToShow(@NonNull AdError adError) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onAdDismissed() {
-                                progressDialog.dismissProgressDialog();
-                            }
+                        @Override
+                        public void onAdDismissed() {
+                            progressDialog.dismissProgressDialog();
+                        }
 
-                            @Override
-                            public void onAdClicked() {
+                        @Override
+                        public void onAdClicked() {
 
-                            }
+                        }
 
-                            @Override
-                            public void onAdImpression(@Nullable ImpressionData impressionData) {
+                        @Override
+                        public void onAdImpression(@Nullable ImpressionData impressionData) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onRewarded(@NonNull Reward reward) {
+                        @Override
+                        public void onRewarded(@NonNull Reward reward) {
 
-                                mul = 5;
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mul = 1;
-                                    }
-                                }, 3000);
+                            mul = 5;
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mul = 1;
+                                }
+                            }, 3000);
 
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(@NonNull final AdRequestError adRequestError) {
-                        progressDialog.dismissProgressDialog();
-                        Toast.makeText(activity, "Не удалось загрузить реакламу:(\nПопробуйте позже", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                if (mRewardedAdLoader != null) {
-                    final AdRequestConfiguration adRequestConfiguration =
-                            new AdRequestConfiguration.Builder("R-M-2428506-2").build();
-                    mRewardedAdLoader.loadAd(adRequestConfiguration);
+                        }
+                    });
                 }
+
+                @Override
+                public void onAdFailedToLoad(@NonNull final AdRequestError adRequestError) {
+                    progressDialog.dismissProgressDialog();
+                    Toast.makeText(activity, "Не удалось загрузить реакламу:(\nПопробуйте позже", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            if (mRewardedAdLoader != null) {
+                final AdRequestConfiguration adRequestConfiguration =
+                        new AdRequestConfiguration.Builder("R-M-2428506-2").build();
+                mRewardedAdLoader.loadAd(adRequestConfiguration);
             }
         });
 
@@ -342,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 Intent i = new Intent(context, ShopActivity.class);
                 i.putExtra("soa", false);
-                i.putExtra("interstitial_ads_count", getIntent().getIntExtra("interstitial_ads_count", 0));
+                i.putExtra("interstitial_ads", getIntent().getBooleanExtra("interstitial_ads", true));
                 startActivity(i);
                 overridePendingTransition(0, 0);
             }
@@ -377,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 Intent i = new Intent(context, BackgroundShopActivity.class);
                 i.putExtra("soa", false);
-                i.putExtra("interstitial_ads_count", getIntent().getIntExtra("interstitial_ads_count", 0));
+                i.putExtra("interstitial_ads", getIntent().getBooleanExtra("interstitial_ads", true));
                 startActivity(i);
                 overridePendingTransition(0, 0);
             }

@@ -27,7 +27,8 @@ public abstract class Heroes {
             "Ужасная птица \uD83D\uDE2E",
             "???",
             "Громила",
-            "Элитная птица"
+            "Элитная птица",
+            "Элитный секретный персонаж"
 
     };
     public static final int[] HEROES_RES_ID = new int[]{
@@ -51,7 +52,8 @@ public abstract class Heroes {
             R.drawable.bird,
             R.drawable.monster,
             R.drawable.grom_1,
-            R.drawable.gold_bird_1
+            R.drawable.gold_bird_1,
+            R.drawable.skibidi_touilet_1
     };
     public static final int[] HEROES_CLICKS = new int[]{
             1,
@@ -74,7 +76,8 @@ public abstract class Heroes {
             350,
             400,
             450,
-            500
+            500,
+            600
     };
     public static final int[] HEROES_PRICES = new int[]{
             0, // 0
@@ -97,7 +100,8 @@ public abstract class Heroes {
             1750000, // 400
             2500000, // 450
             3000000, // 500
-            4000000,
+            4000000, //600
+            6000000
     };
 
     public static List<Hero> buildHeroes() {

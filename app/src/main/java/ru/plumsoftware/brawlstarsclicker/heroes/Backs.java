@@ -10,19 +10,22 @@ public abstract class Backs {
             "Классический задний фон",
             "Морской задний фон",
             "Пустыня",
-            "Каньон"
+            "Каньон",
+            "Скибиди задний фон"
     };
     public static final int[] BACKS_RES_ID = new int[]{
             R.drawable.back_2,
             R.drawable.back_3,
             R.drawable.back_4,
-            R.drawable.back_5
+            R.drawable.back_5,
+            R.drawable.skibidi_toilet_nackground_1
     };
     public static final int[] BACKS_PRICES = new int[]{
             5000,
             100000,
             2000000,
-            5500000
+            5500000,
+            8500000
     };
 
     public static List<Back> buildHeroes() {

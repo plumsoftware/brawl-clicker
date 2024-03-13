@@ -86,8 +86,7 @@ public class ShopActivity extends AppCompatActivity {
                             overridePendingTransition(0, 0);
                             Intent i = new Intent(ShopActivity.this, MainActivity.class);
                             i.putExtra("soa", false);
-                            int a = getIntent().getIntExtra("interstitial_ads_count", 0) + 1;
-                            i.putExtra("interstitial_ads_count", a);
+                            i.putExtra("interstitial_ads", false);
                             startActivity(i);
                         }
 
@@ -97,8 +96,7 @@ public class ShopActivity extends AppCompatActivity {
                             overridePendingTransition(0, 0);
                             Intent i = new Intent(ShopActivity.this, MainActivity.class);
                             i.putExtra("soa", false);
-                            int a = getIntent().getIntExtra("interstitial_ads_count", 0) + 1;
-                            i.putExtra("interstitial_ads_count", a);
+                            i.putExtra("interstitial_ads", false);
                             startActivity(i);
                         }
 
@@ -118,8 +116,7 @@ public class ShopActivity extends AppCompatActivity {
                 overridePendingTransition(0, 0);
                 Intent i = new Intent(ShopActivity.this, MainActivity.class);
                 i.putExtra("soa", false);
-                int a = getIntent().getIntExtra("interstitial_ads_count", 0);
-                i.putExtra("interstitial_ads_count", a);
+                i.putExtra("interstitial_ads", true);
                 startActivity(i);
             }
         });
@@ -199,7 +196,7 @@ public class ShopActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (mInterstitialAdLoader != null) {
             if (
-                    getIntent().getIntExtra("interstitial_ads_count", 0) % 4 == 0
+                    getIntent().getBooleanExtra("interstitial_ads", true)
             ) {
                 progressDialog.showProgressDialog();
                 final AdRequestConfiguration adRequestConfiguration =
@@ -208,24 +205,21 @@ public class ShopActivity extends AppCompatActivity {
             } else {
                 progressDialog.dismissProgressDialog();
 
-                finish();
-                overridePendingTransition(0, 0);
-
                 Intent i = new Intent(ShopActivity.this, MainActivity.class);
                 i.putExtra("soa", false);
-                int a = getIntent().getIntExtra("interstitial_ads_count", 0);
-                i.putExtra("interstitial_ads_count", a);
+                i.putExtra("interstitial_ads", true);
                 startActivity(i);
+                overridePendingTransition(0, 0);
+
+                finish();
             }
         } else {
-            finish();
-            overridePendingTransition(0, 0);
-
             Intent i = new Intent(ShopActivity.this, MainActivity.class);
             i.putExtra("soa", false);
-            int a = getIntent().getIntExtra("interstitial_ads_count", 0);
-            i.putExtra("interstitial_ads_count", a);
+            i.putExtra("interstitial_ads", true);
             startActivity(i);
+            overridePendingTransition(0, 0);
+            finish();
         }
     }
 }
