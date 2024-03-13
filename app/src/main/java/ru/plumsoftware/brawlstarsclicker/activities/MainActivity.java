@@ -174,13 +174,11 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = context.getSharedPreferences(Data.SP_NAME, Context.MODE_PRIVATE);
 
 
-//        layout.setBackgroundResource(sharedPreferences.getInt(Data.SP_IMAGE_BACK_RES_ID, R.drawable.back_2));
-        layout.setBackgroundResource(R.drawable.skibidi_toilet_nackground_1);
+        layout.setBackgroundResource(sharedPreferences.getInt(Data.SP_IMAGE_BACK_RES_ID, R.drawable.back_2));
 
         score = sharedPreferences.getLong(Data.SP_SCORE, 0);
         click = sharedPreferences.getInt(Data.SP_CLICK, 1);
-//        imageResId = sharedPreferences.getInt(Data.SP_IMAGE_RES_ID, R.drawable.spike_1);
-        imageResId = R.drawable.skibidi_touilet_1;
+        imageResId = sharedPreferences.getInt(Data.SP_IMAGE_RES_ID, R.drawable.spike_1);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putBoolean(Data.SP_HEROES_IS_BUY[0], true);
         edit.apply();
@@ -342,7 +340,8 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 Intent i = new Intent(context, ShopActivity.class);
                 i.putExtra("soa", false);
-                i.putExtra("interstitial_ads", getIntent().getBooleanExtra("interstitial_ads", true));
+                i.putExtra("interstitial_ads_shop", getIntent().getBooleanExtra("interstitial_ads_shop", true));
+                i.putExtra("interstitial_ads_background_shop", getIntent().getBooleanExtra("interstitial_ads_background_shop", true));
                 startActivity(i);
                 overridePendingTransition(0, 0);
             }
@@ -377,7 +376,8 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 Intent i = new Intent(context, BackgroundShopActivity.class);
                 i.putExtra("soa", false);
-                i.putExtra("interstitial_ads", getIntent().getBooleanExtra("interstitial_ads", true));
+                i.putExtra("interstitial_ads_background_shop", getIntent().getBooleanExtra("interstitial_ads_background_shop", true));
+                i.putExtra("interstitial_ads_shop", getIntent().getBooleanExtra("interstitial_ads_shop", true));
                 startActivity(i);
                 overridePendingTransition(0, 0);
             }

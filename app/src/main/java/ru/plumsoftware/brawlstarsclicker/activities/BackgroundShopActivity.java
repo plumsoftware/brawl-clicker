@@ -82,7 +82,8 @@ public class BackgroundShopActivity extends AppCompatActivity {
                             overridePendingTransition(0, 0);
                             Intent i = new Intent(BackgroundShopActivity.this, MainActivity.class);
                             i.putExtra("soa", false);
-                            i.putExtra("interstitial_ads", false);
+                            i.putExtra("interstitial_ads_background_shop", false);
+                            i.putExtra("interstitial_ads_shop", getIntent().getBooleanExtra("interstitial_ads_shop", true));
                             startActivity(i);
                         }
 
@@ -92,7 +93,8 @@ public class BackgroundShopActivity extends AppCompatActivity {
                             overridePendingTransition(0, 0);
                             Intent i = new Intent(BackgroundShopActivity.this, MainActivity.class);
                             i.putExtra("soa", false);
-                            i.putExtra("interstitial_ads", false);
+                            i.putExtra("interstitial_ads_background_shop", false);
+                            i.putExtra("interstitial_ads_shop", getIntent().getBooleanExtra("interstitial_ads_shop", true));
                             startActivity(i);
                         }
 
@@ -112,7 +114,8 @@ public class BackgroundShopActivity extends AppCompatActivity {
                 overridePendingTransition(0, 0);
                 Intent i = new Intent(BackgroundShopActivity.this, MainActivity.class);
                 i.putExtra("soa", false);
-                i.putExtra("interstitial_ads", true);
+                i.putExtra("interstitial_ads_background_shop", true);
+                i.putExtra("interstitial_ads_shop", getIntent().getBooleanExtra("interstitial_ads_shop", true));
                 startActivity(i);
             }
         });
@@ -157,7 +160,7 @@ public class BackgroundShopActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (mInterstitialAdLoader != null) {
             if (
-                    getIntent().getBooleanExtra("interstitial_ads", true)
+                    getIntent().getBooleanExtra("interstitial_ads_background_shop", true)
             ) {
                 progressDialog.showProgressDialog();
                 final AdRequestConfiguration adRequestConfiguration =
@@ -168,7 +171,8 @@ public class BackgroundShopActivity extends AppCompatActivity {
 
                 Intent i = new Intent(BackgroundShopActivity.this, MainActivity.class);
                 i.putExtra("soa", false);
-                i.putExtra("interstitial_ads", true);
+                i.putExtra("interstitial_ads_background_shop", false);
+                i.putExtra("interstitial_ads_shop", getIntent().getBooleanExtra("interstitial_ads_shop", true));
                 startActivity(i);
 
                 overridePendingTransition(0, 0);
@@ -177,7 +181,8 @@ public class BackgroundShopActivity extends AppCompatActivity {
         } else {
             Intent i = new Intent(BackgroundShopActivity.this, MainActivity.class);
             i.putExtra("soa", false);
-            i.putExtra("interstitial_ads", true);
+            i.putExtra("interstitial_ads_background_shop", false);
+            i.putExtra("interstitial_ads_shop", getIntent().getBooleanExtra("interstitial_ads_shop", true));
             startActivity(i);
             overridePendingTransition(0, 0);
             finish();
