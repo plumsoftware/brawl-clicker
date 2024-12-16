@@ -39,6 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:contentDescription="Изображение"
         android:elevation="24dp"
         android:padding="48dp"
         app:srcCompat="@drawable/spike_1" />
@@ -268,4 +269,10 @@
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
+
+    <com.yandex.mobile.ads.banner.BannerAdView
+        android:id="@+id/ad_banner_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </LinearLayout>
