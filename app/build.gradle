@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace 'ru.plumsoftware.brawlstarsclicker'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "ru.plumsoftware.brawlstarsclicker"
         minSdk 25
-        targetSdk 35
-        versionCode 15
-        versionName "2.1.3"
+        targetSdk 36
+        versionCode 17
+        versionName "2.1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,5 +37,5 @@ dependencies {
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     testImplementation 'junit:junit:4.13.2'
-    implementation 'com.yandex.android:mobileads:7.11.0'
+    implementation 'com.yandex.android:mobileads:7.13.0'
 }
